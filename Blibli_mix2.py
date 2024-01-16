@@ -242,3 +242,4 @@ df.to_excel(f'blibli_{y}.xlsx')
 #     time.sleep(1)     
 
 # driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
+#okee
