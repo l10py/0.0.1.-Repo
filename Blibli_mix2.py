@@ -232,6 +232,8 @@ import datetime
 y=datetime.date.today()
 df=pd.DataFrame(data=[list_link,list_stock]).T
 df.to_excel(f'blibli_{y}.xlsx')
+
+print(list_link)
 # from tokped_scrapper import tokped_scrapper
 # import schedule
 # import time

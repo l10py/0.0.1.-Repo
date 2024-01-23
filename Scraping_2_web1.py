@@ -74,7 +74,7 @@ format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d")
 df = pd.DataFrame(produk_list)
 
 # Simpan dataframe ke Excel
-df.to_excel("produk-{}.xlsx".format(format_teks))
+df.to_excel("produk_bukalapak single-{}.xlsx".format(format_teks))
 
 # Tutup browser
 driver.close()
