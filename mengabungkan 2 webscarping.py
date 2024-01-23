@@ -12,8 +12,8 @@ def program2():
     print("Program 2 dijalankan.")
 
 # Jadwalkan program 2 untuk dijalankan 10 detik setelah program 1 selesai
-schedule.every(10).seconds.do(program2)
-
+schedule.every(2).seconds.do(program2)
+#schedule.after(10, program2)
 # Jalankan program 1
 program1()
 

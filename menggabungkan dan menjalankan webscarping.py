@@ -69,13 +69,13 @@ def program1():
     tanggal_dan_waktu = dt.datetime.now()
 
 # Ubah tanggal dan waktu menjadi format teks
-    format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d")
+    format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d_%H;%M;%S")
 
 # Buat dataframe dari list produk
     df = pd.DataFrame(produk_list)
 
 # Simpan dataframe ke Excel
-    df.to_excel("produk_bukalapak single-{}.xlsx".format(format_teks))
+    df.to_excel("produk_bukalapak-{}.xlsx".format(format_teks))
 
 # Tutup browser
     driver.close()
@@ -105,19 +105,19 @@ def program2():
     # Dapatkan judul produk
     
         try:
-            judul_produk = driver.find_element(By.CSS_SELECTOR, ".-discounted span").text
+            judul_produk = driver.find_element(By.CSS_SELECTOR, "h1").text
         except NoSuchElementException:
             judul_produk = ""
 
     # Dapatkan harga produk
         try:
-            harga_produk = driver.find_element(By.CSS_SELECTOR, ".-stroke span").text
+            harga_produk = driver.find_element(By.CSS_SELECTOR, ".original-price span[data-testid]").text
         except NoSuchElementException:
             harga_produk = ""
 
     # Dapatkan deskripsi produk
         try:
-            deskripsi_produk = driver.find_element(By.CSS_SELECTOR, ".-main span").text
+            deskripsi_produk = driver.find_element(By.CSS_SELECTOR, "div.price").text
         except NoSuchElementException:
             deskripsi_produk = ""
     
@@ -146,26 +146,26 @@ def program2():
     tanggal_dan_waktu = dt.datetime.now()
 
 # Ubah tanggal dan waktu menjadi format teks
-    format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d")
+    format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d_%H;%M;%S")
 
 # Buat dataframe dari list produk
     df = pd.DataFrame(produk_list)
 
 # Simpan dataframe ke Excel
-    df.to_excel("produk_bukalapak single-{}.xlsx".format(format_teks))
+    df.to_excel("produk_tokopedia-{}.xlsx".format(format_teks))
 
 # Tutup browser
     driver.close()
 # Jadwalkan program 2 untuk dijalankan 10 detik setelah program 1 selesai
-schedule.every(10).seconds.do(program2)
+schedule.every(20).seconds.do(program2)
 
 # Jalankan program 1
 program1()
 
 # Tunggu selama 10 detik
-time.sleep(10)
+#time.sleep(10)
 
-if schedule.jobs:
-    print("Program 2 telah dijalankan.")
-else:
-    print("Program 2 belum dijalankan.")
+#if schedule.jobs:
+    #print("Program 2 telah dijalankan.")
+#else:
+    #print("Program 2 belum dijalankan.")
