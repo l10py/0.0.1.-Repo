@@ -1,34 +1,19 @@
 import tkinter as tk
+from tkinter import ttk
 
-# Buat jendela utama
-root = tk.Tk()
+window = tk.Tk()
+window.configure(bg="white")
+window.geometry("300x200")
+window.resizable(False,False)
+window.title("sapa dia!")
 
-# Buat label
-label = tk.Label(root, text="Nama:")
+#frame input
+input_frame=ttk.Frame(window)
+#penempatan Grid, PAck, Place
+input_frame.pack(padx=10,pady=10,fill="x",expand=True)
 
-# Buat kotak teks
-entry_nama = tk.Entry(root)
+#komponen-komponen
+nama_depan_label = ttk.Label(window,text="ucup")
+nama_depan_label.pack(padx=10,pady=10,fill="x",expand=True)
 
-# Posisikan label dan kotak teks
-label.pack()
-entry_nama.pack()
-
-# Buat tombol
-button = tk.Button(root, text="Oke")
-
-# Posisikan tombol
-button.pack()
-
-# Definisikan fungsi untuk menangani peristiwa klik tombol
-def klik_tombol():
-    # Dapatkan nilai dari kotak teks
-    nama = entry_nama.get()
-
-    # Tampilkan nilai di konsol
-    print(nama)
-
-# Hubungkan fungsi dengan peristiwa klik tombol
-button.config(command=klik_tombol)
-
-# Jalankan jendela
-root.mainloop()
+window.mainloop()

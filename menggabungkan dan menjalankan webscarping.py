@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import pandas as pd
 import datetime as dt
+import os
 
 # Program 1
 def program1():
@@ -75,7 +76,7 @@ def program1():
     df = pd.DataFrame(produk_list)
 
 # Simpan dataframe ke Excel
-    df.to_excel("produk_bukalapak-{}.xlsx".format(format_teks))
+    df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "produk_bukalapak-{}.xlsx".format(format_teks)))
 
 # Tutup browser
     driver.close()
@@ -152,7 +153,7 @@ def program2():
     df = pd.DataFrame(produk_list)
 
 # Simpan dataframe ke Excel
-    df.to_excel("produk_tokopedia-{}.xlsx".format(format_teks))
+    df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "produk_tokopedia-{}.xlsx".format(format_teks)))
 
 # Tutup browser
     driver.close()
