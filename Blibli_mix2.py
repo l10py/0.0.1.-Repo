@@ -172,6 +172,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from alive_progress import alive_bar
+
 # capa = DesiredCapabilities.CHROME
 # capa["pageLoadStrategy"] = "none"
 options = Options()

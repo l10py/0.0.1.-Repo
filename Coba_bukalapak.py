@@ -2,7 +2,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import pandas as pd
-
+import requests
 # Buat browser Chrome
 driver = webdriver.Chrome()   
 
