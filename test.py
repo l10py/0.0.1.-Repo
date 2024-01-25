@@ -6,6 +6,7 @@ def scrape_produk():
     import coding
 
 
+
 root = tk.Tk()
 
 # Buat tombol untuk memulai scraping produk
