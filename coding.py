@@ -16,7 +16,7 @@ def program1():
 
 # Buat daftar link produk
     link_produk = ["https://www.bukalapak.com/p/motor-471/produk-perawatan-motor/oil-fluids-454/4goan6m-jual-totalenergies-hi-perf-4t-300-20w-50-oli-motor-0-8l","https://www.bukalapak.com/p/perawatan-kecantikan/produk-kecantikan-lainnya/10t6vse-jual-nivea-deodorant-extra-whitening-spray-150ml"]
-
+    print(link_produk)
     produk_list = []
 # Looping untuk setiap link produk
     for link in link_produk:

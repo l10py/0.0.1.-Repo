@@ -172,7 +172,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from alive_progress import alive_bar
-
+import os
 # capa = DesiredCapabilities.CHROME
 # capa["pageLoadStrategy"] = "none"
 options = Options()
@@ -229,10 +229,23 @@ with alive_bar(len(list_stock),title='validating data....') as bar:
         bar()
 driver.quit()             
 import pandas as pd
-import datetime
-y=datetime.date.today()
-df=pd.DataFrame(data=[list_link,list_stock]).T
-df.to_excel(f'blibli_{y}.xlsx')
+import datetime as dt
+
+
+#y=datetime.date.today()
+#df=pd.DataFrame(data=[list_link,list_stock]).T
+#df.to_excel(f'blibli_{y}.xlsx')
+tanggal_dan_waktu = dt.datetime.now()
+
+# Ubah tanggal dan waktu menjadi format teks
+format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d_%H;%M;%S")
+
+# Buat dataframe dari list produk
+df = pd.DataFrame(data=[list_link,list_stock]).T
+
+# Simpan dataframe ke Excel
+df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "OSA-Blibli-{}.xlsx".format(format_teks)))
+
 
 print(list_link)
 # from tokped_scrapper import tokped_scrapper
