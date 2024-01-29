@@ -18,6 +18,11 @@ entry_1.pack()
 entry_2 = tk.Entry(root)  # Buat langsung entry_2 tanpa hidden
 entry_2.pack()
 
+link_produk = []
+input_selector_h1 = None
+
+
+
 def print_input(input_1, input_2):
     global link_produk
     link_produk = input_1.split()
@@ -38,6 +43,9 @@ def save_data_as():
         with open(filename, "w") as f:
             json.dump(data, f)
 
+button_save = tk.Button(root, text="Save Data As", command=save_data_as)
+button_save.pack()
+
 def load_data_from():
     filename = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
     if filename:
@@ -53,8 +61,7 @@ def load_data_from():
         except json.JSONDecodeError:
             print("File bukan format JSON yang valid.")
 
-button_save = tk.Button(root, text="Save Data As", command=save_data_as)
-button_save.pack()
+
 
 button_load = tk.Button(root, text="Load Data From", command=load_data_from)
 button_load.pack()
@@ -65,11 +72,10 @@ button_load.pack()
 
 
 
-
 def scraping():
     driver = webdriver.Chrome()
 
-    print(link_produk)
+    
 
     produk_list = []
     for link in link_produk:
@@ -101,7 +107,7 @@ def scraping():
     df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "produk_bukalapak-{}.xlsx".format(format_teks)))
 
     driver.close()
-
+    print(link_produk)
 
 def start_scraping():
     print_input(entry_1.get(), entry_2.get())

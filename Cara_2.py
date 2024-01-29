@@ -26,7 +26,7 @@ def save_data():
 
     # Dapatkan nama file menggunakan filedialog.asksaveasfilename
     filename = filedialog.asksaveasfilename(defaultextension=".json")  # Gunakan filedialog langsung
-
+    data = entry
     # Simpan data ke file JSON
     with open(filename, "w") as f:
         json.dump(data, f)
