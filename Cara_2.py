@@ -1,13 +1,54 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+import tkinter as tk
+import json
+from tkinter import filedialog
+# Buat jendela utama
+root = tk.Tk()
 
-driver = webdriver.Chrome()
-driver.get("https://www.bukalapak.com/p/motor-471/produk-perawatan-motor/oil-fluids-454/4goan6m-jual-totalenergies-hi-perf-4t-300-20w-50-oli-motor-0-8l")
+# Buat label untuk input
+label = tk.Label(root, text="Input")
+label.pack()
 
-# Cari elemen dengan tag "h1"
-product_name_element = driver.find_element(By.CSS_SELECTOR, "button.c-main-product__action__buy")
+# Buat input
+entry = tk.Entry(root)
+entry.pack()
 
-# Dapatkan teks dari elemen tersebut
-product_name = product_name_element.text
+# Buat tombol Simpan
 
-print(product_name)
+
+
+
+
+
+# Fungsi untuk menyimpan data
+def save_data():
+    # Dapatkan nilai input
+    input_value = entry.get()
+
+    # Dapatkan nama file menggunakan filedialog.asksaveasfilename
+    filename = filedialog.asksaveasfilename(defaultextension=".json")  # Gunakan filedialog langsung
+
+    # Simpan data ke file JSON
+    with open(filename, "w") as f:
+        json.dump(data, f)
+
+# Fungsi untuk memuat data
+def load_data():
+    # Dapatkan nama file
+    filename = tk.filedialog.askopenfilename(filetypes=[("JSON", "*.json")])
+
+    # Buka file JSON
+    with open(filename, "r") as f:
+        data = json.load(f)
+
+    # Set nilai input dari data JSON
+    entry.delete(0, tk.END)
+    entry.insert(0, data["input"])
+
+button_save = tk.Button(root, text="Simpan", command=save_data)
+button_save.pack()
+
+# Buat tombol Muat
+button_load = tk.Button(root, text="Muat", command=load_data)
+button_load.pack()
+# Jalankan program
+root.mainloop()
