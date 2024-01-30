@@ -1,4 +1,3 @@
-import schedule
 import time
 import schedule
 from selenium import webdriver
@@ -7,7 +6,9 @@ from selenium.common.exceptions import NoSuchElementException
 import pandas as pd
 import datetime as dt
 import os
-
+from selenium.webdriver.support import expected_conditions as EC
+#from selenium.webdriver.support.expected_conditions import EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Buka browser Chrome
 driver = webdriver.Chrome()
@@ -23,14 +24,16 @@ for link in link_produk:
     driver.get(link)
 
     # Tunggu selama 5 detik
-    time.sleep(3)
+    #time.sleep(3)
 
     # Dapatkan judul produk
     
     try:
-        judul_produk = driver.find_element(By.CSS_SELECTOR, ".-discounted span").text
+        wait = WebDriverWait(driver, 20)
+        judul_produk = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "h1"))).text
+        #judul_produk = driver.find_element(By.CSS_SELECTOR, ".-discounted span").text
     except NoSuchElementException:
-        judul_produk = ""
+        pass
 
     # Simpan informasi produk ke dalam dictionary
     produk = {
