@@ -82,7 +82,6 @@ def program1():
     driver.close()
 
     if len(produk_list) == len(link_produk):
-        # Jalankan program 2
         schedule.run_all()
 
 def program2():

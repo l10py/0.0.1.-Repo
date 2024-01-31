@@ -25,17 +25,6 @@ label_2.pack()
 entry_2 = tk.Entry(root)  # Buat langsung entry_2 tanpa hidden
 entry_2.pack()
 
-label_3 = tk.Label(root, text="Link_Tokopedia")
-label_3.pack()
-entry_3 = tk.Entry(root)
-entry_3.pack()
-
-label_4 = tk.Label(root, text="Selector 1")
-label_4.pack()
-entry_4 = tk.Entry(root)
-entry_4.pack()
-
-
 
 link_produk_1 = []
 input_selector_h1 = None
