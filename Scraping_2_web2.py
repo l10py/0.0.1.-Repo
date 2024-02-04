@@ -12,8 +12,11 @@ import datetime as dt
 driver = webdriver.Chrome()
 
 # Buat daftar link produk
-link_produk = ["https://www.tokopedia.com/fumakillaindonesiastore/fumakilla-vape-plus-obat-nyamuk-orange-500ml-isi-3",
-               "https://www.bukalapak.com/p/perawatan-kecantikan/produk-kecantikan-lainnya/10t6vse-jual-nivea-deodorant-extra-whitening-spray-150ml"]
+link_produk = ["https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=50_ml",
+"https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=100_ml",
+"https://www.sociolla.com/face-wash/26498-nivea-men-deep-bright-oil-clear-mud-foam",
+"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=75_ml",
+"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=30_ml"]
 
 produk_list = []
 # Looping untuk setiap link produk

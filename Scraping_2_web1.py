@@ -1,3 +1,4 @@
+
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -6,14 +7,29 @@ import openpyxl
 from selenium.common.exceptions import NoSuchElementException
 import pandas as pd
 import datetime as dt
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 
+options = Options()  
+# Buat objek pengaturan
+# Atur opsi untuk menonaktifkan tanda-tanda bot:
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+options.add_argument('--disable-blink-features=AutomationControlled')
+options.add_argument('--disable-notifications')
 
-# Buka browser Chrome
-driver = webdriver.Chrome()
+#driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=options) 
 
-# Buat daftar link produk
-link_produk = ["https://www.bukalapak.com/p/motor-471/produk-perawatan-motor/oil-fluids-454/4goan6m-jual-totalenergies-hi-perf-4t-300-20w-50-oli-motor-0-8l",
-               "https://www.bukalapak.com/p/perawatan-kecantikan/produk-kecantikan-lainnya/10t6vse-jual-nivea-deodorant-extra-whitening-spray-150ml"]
+driver.set_window_size(400,500)
+wait=WebDriverWait(driver,20)
+link_produk = ["https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=50_ml",
+"https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=100_ml",
+"https://www.sociolla.com/face-wash/26498-nivea-men-deep-bright-oil-clear-mud-foam",
+"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=75_ml",
+"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=30_ml"
+
+]
 
 produk_list = []
 # Looping untuk setiap link produk
@@ -22,18 +38,18 @@ for link in link_produk:
     driver.get(link)
 
     # Tunggu selama 5 detik
-    time.sleep(3)
+    time.sleep(5)
 
     # Dapatkan judul produk
     
     try:
-        judul_produk = driver.find_element(By.CSS_SELECTOR, ".-discounted span").text
+        judul_produk = driver.find_element(By.CSS_SELECTOR, ".submit span").text
     except NoSuchElementException:
         judul_produk = ""
 
     # Dapatkan harga produk
     try:
-        harga_produk = driver.find_element(By.CSS_SELECTOR, ".-stroke span").text
+        harga_produk = driver.find_element(By.CSS_SELECTOR, "h1").text
     except NoSuchElementException:
         harga_produk = ""
 

@@ -1,27 +1,59 @@
+import requests
+from bs4 import BeautifulSoup
 import schedule
 import time
-import schedule
 
 
-# Program 1
-def program1():
-    print("Program 1 dijalankan.")
+# Webscraper pertama
+def get_data_from_website1(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    data = soup.find_all("div", class_="data-container")
+    return data
 
-# Program 2
-def program2():
-    print("Program 2 dijalankan.")
 
-# Jadwalkan program 2 untuk dijalankan 10 detik setelah program 1 selesai
-schedule.every(2).seconds.do(program2)
-#schedule.after(10, program2)
-# Jalankan program 1
-program1()
+# Webscraper kedua
+def get_data_from_website2(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    data = soup.find_all("table", class_="data-table")
+    return data
 
-# Tunggu selama 10 detik
-time.sleep(10)
 
-# Cek apakah program 2 telah dijalankan
-if schedule.jobs:
-    print("Program 2 telah dijalankan.")
-else:
-    print("Program 2 belum dijalankan.")
+# Webscraper ketiga
+def get_data_from_website3(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    data = soup.find_all("ul", class_="data-list")
+    return data
+
+
+# Menggabungkan data
+def combine_data(data1, data2, data3):
+    combined_data = data1 + data2 + data3
+    return combined_data
+
+
+# Menjalankan webscraper dan menggabungkan data
+def run_webscrapers():
+    url1 = "https://www.website1.com/"
+    url2 = "https://www.website2.com/"
+    url3 = "https://www.website3.com/"
+
+    data1 = get_data_from_website1(url1)
+    data2 = get_data_from_website2(url2)
+    data3 = get_data_from_website3(url3)
+
+    combined_data = combine_data(data1, data2, data3)
+
+    # Simpan atau tampilkan data gabungan
+    # ...
+
+
+# Menjadwalkan eksekusi webscraper
+schedule.every(10).minutes.do(run_webscrapers)
+
+# Menjalankan program
+while True:
+    schedule.run_pending()
+    time.sleep(1)
