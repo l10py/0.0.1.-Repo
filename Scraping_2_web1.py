@@ -23,12 +23,9 @@ driver = webdriver.Chrome(options=options)
 
 driver.set_window_size(400,500)
 wait=WebDriverWait(driver,20)
-link_produk = ["https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=50_ml",
-"https://www.sociolla.com/face-wash/26490-nivea-men-extra-white-dark-spot-minimizer-foam?size=100_ml",
-"https://www.sociolla.com/face-wash/26498-nivea-men-deep-bright-oil-clear-mud-foam",
-"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=75_ml",
-"https://www.sociolla.com/face-cream-lotion/26499-nivea-men-creme?size=30_ml"
-
+link_produk = ["https://www.blibli.com/p/nivea-body-care-body-serum-extra-white-anti-age-180-ml/ps--BEF-44369-00008",
+"https://www.blibli.com/p/nivea-body-lotion-intensive-moisture-190-ml/ps--BEF-44369-00087",
+"https://www.blibli.com/p/nivea-body-lotion-intensive-moisture-400-ml/ps--BEF-44369-00088"
 ]
 
 produk_list = []
@@ -43,19 +40,19 @@ for link in link_produk:
     # Dapatkan judul produk
     
     try:
-        judul_produk = driver.find_element(By.CSS_SELECTOR, ".submit span").text
+        judul_produk = driver.find_element(By.CSS_SELECTOR, "h1").text
     except NoSuchElementException:
         judul_produk = ""
 
     # Dapatkan harga produk
     try:
-        harga_produk = driver.find_element(By.CSS_SELECTOR, "h1").text
+        harga_produk = driver.find_element(By.CSS_SELECTOR, ".action-list-desktop button.buy-now").text
     except NoSuchElementException:
         harga_produk = ""
 
     # Dapatkan deskripsi produk
     try:
-        deskripsi_produk = driver.find_element(By.CSS_SELECTOR, ".-main span").text
+        deskripsi_produk = driver.find_element(By.CSS_SELECTOR, "span.ori").text
     except NoSuchElementException:
         deskripsi_produk = ""
     
