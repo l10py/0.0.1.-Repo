@@ -11,6 +11,7 @@ import json
 import tkinter.filedialog as filedialog
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 
 root = tk.Tk()
 
@@ -99,7 +100,9 @@ button_load = tk.Button(root, text="Load Data From", command=load_data_from)
 button_load.pack()
 
 def program1():
-    driver = webdriver.Chrome()
+    #driver = webdriver.Chrome()
+    driver = webdriver.Chrome(executable_path='/path/to/chromedriver', chrome_options=options, service_args=["--max_old_space_size=4096"])
+    driver.set_window_size(400,500)
     produk_list = []
     for link in link_produk_1:
         driver.get(link)
