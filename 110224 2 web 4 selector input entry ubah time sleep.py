@@ -286,7 +286,7 @@ def program2():
     #program1()
 def scraping():
     schedule.every(20).seconds.do(program2)  # Pindahkan ke sini  # Pindahkan ke sini
-
+    
     program1()
     schedule.run_all()
 

@@ -1,9 +1,8 @@
-import memory_profiler
 import time
 import schedule
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 import pandas as pd
 import datetime as dt
 import os
@@ -13,9 +12,9 @@ import tkinter.filedialog as filedialog
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
-
-
-
+from selenium.webdriver.common.by import By
+from retry import retry
+options = Options()
 root = tk.Tk()
 
 label_1 = tk.Label(root, text="Link Bukalapak")
@@ -158,100 +157,106 @@ def load_data_from():
             print("File bukan format JSON yang valid.")
 button_load = tk.Button(root, text="Load Data From", command=load_data_from)
 button_load.pack()
-@memory_profiler.profile
-def program1():
 
+def program1(max_retries=3):
     options = Options()
-    #options.add_argument('--disable-images')
-    options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-    driver = webdriver.Chrome(options=options)
-    driver.set_window_size(400,300)
     #driver = webdriver.Chrome()
+    options.add_argument('--incognito')
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-images")
+    options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
+    # Add various optimizations as before
+    options.add_argument("--max-old-space-size=4096")
+    driver = webdriver.Chrome(options=options)
+    driver.set_window_size(400,500)
     produk_list = []
     for link in link_produk_1:
-        driver.get(link)
-        time.sleep(2)
-    try:
-        # Menunggu elemen H1 (penting)
-        
-        wait = WebDriverWait(driver, 20)
-        judul_produk = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_h1))).text
-
-        # Jika H1 ditemukan, lanjutkan untuk mengambil informasi produk lainnya
-        if judul_produk:
-            print(f"Judul produk: {judul_produk}")
-
-            # Menunggu dan mengekstrak stok (opsional)
+        for _ in range(max_retries):
             try:
-                stok = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_2_bukalapak))).text
-                print(f"Stok: {stok}")
-            except NoSuchElementException:
-                pass  # Lanjutkan jika elemen stok tidak ditemukan
+                driver.get(link)
+            #time.sleep(2)  # Adjust delay based on network conditions
 
-            # Menunggu dan mengekstrak harga normal (opsional)
-            try:
-                harga_normal = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_3_bukalapak))).text
-                print(f"Harga normal: {harga_normal}")
-            except NoSuchElementException:
-                pass  # Lanjutkan jika elemen harga normal tidak ditemukan
+            # Enhanced error handling and retry logic
+                try:
+                    judul_produk = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_h1))).text
+                except (NoSuchElementException, TimeoutException) as e:
+                    print(f"Error finding title on {link}: {e}")
+                    continue  # Proceed to the next link
+                break
+            except MemoryError as e:
+                print(f"Out of Memory error: {e}")
+                #driver.execute_script("window.location.reload();")
+                driver.quit()
+                driver = webdriver.Chrome()
 
-            # Menunggu dan mengekstrak harga jual (opsional)
-            try:
-                harga_jual = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_4_bukalapak))).text
-                print(f"Harga jual: {harga_jual}")
-            except NoSuchElementException:
-                pass  # Lanjutkan jika elemen harga jual tidak ditemukan
 
-            # Tambahkan produk ke daftar (opsional)
-            produk_list.append({"judul": judul_produk, "stok": stok, "harga_normal": harga_normal, "harga_jual": harga_jual})
+                try:
+                    stok = driver.find_element(By.CSS_SELECTOR, input_selector_2_bukalapak).text
+                except NoSuchElementException:
+                    stok = ""
+                try:
+                    harga_normal = driver.find_element(By.CSS_SELECTOR, input_selector_3_bukalapak).text
+                except NoSuchElementException:
+                    harga_normal = ""
+                try:
+                    harga_jual = driver.find_element(By.CSS_SELECTOR, input_selector_4_bukalapak).text
+                except NoSuchElementException:
+                    harga_jual = ""
 
-    except NoSuchElementException:
-        pass  # Lanjutkan ke link produk berikutnya
-
-        produk = {
-            "links": link,
-            "judul": judul_produk,
-            "stok": stok,
-            "harga_normal": harga_normal,
-            "harga_jual": harga_jual
+                produk = {
+                    "links": link,
+                    "judul": judul_produk,
+                    "stok": stok,
+                    "harga_normal": harga_normal,
+                    "harga_jual": harga_jual
                 }
-        produk_list.append(produk)
-    for produk in produk_list:
-         print("links:", produk["links"])
+                produk_list.append(produk)
+                print(f"Extracted product details for {link}")
 
-    tanggal_dan_waktu = dt.datetime.now()
+                for produk in produk_list:
+                    print("links:", produk["links"])  
 
-    format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d_%H;%M;%S")
+                tanggal_dan_waktu = dt.datetime.now()
 
-    df = pd.DataFrame(produk_list)
+                format_teks = tanggal_dan_waktu.strftime("%Y-%m-%d_%H;%M;%S")
 
-    df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "produk_bukalapak-{}.xlsx".format(format_teks)))
-    driver.quit()
+                df = pd.DataFrame(produk_list)
+
+                df.to_excel(os.path.join("C:\\Users\\BIJKT-MEIDIN\\Downloads", "prodtokopediadia-{}.xlsx".format(format_teks)))
+
+
+
+
+
+    # ... rest of the code for saving data to Excel ...
+
+    driver.quit()  # Close the browser even if no `MemoryError` occurred
+
+
+
 def program2():
     driver = webdriver.Chrome()
     produk_list = []
     for link in link_produk_2:
         driver.get(link)
+        time.sleep(2)
         try:
-            wait = WebDriverWait(driver, 20)
-            judul_produk = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_h1))).text
-        except NoSuchElementException:
-            pass
+            judul_produk = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_h2))).text        
+        except (NoSuchElementException, TimeoutException) as e:
+            driver.refresh()
         try:
-            wait = WebDriverWait(driver, 20)
-            stok = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_2_tokopedia))).text
+            stok = driver.find_element(EC.presence_of_element_located(By.CSS_SELECTOR, input_selector_2_tokopedia)).text
         except NoSuchElementException:
-            pass
+            stok = ""
         try:
-            wait = WebDriverWait(driver, 20)
-            harga_normal = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_3_tokopedia))).text
+            harga_normal = driver.find_element(EC.presence_of_element_located(By.CSS_SELECTOR, input_selector_3_tokopedia)).text
         except NoSuchElementException:
-            pass
+            harga_normal = ""
         try:
-            wait = WebDriverWait(driver, 20)
-            harga_jual = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, input_selector_4_tokopedia))).text
+            harga_jual = driver.find_element(EC.presence_of_element_located(By.CSS_SELECTOR, input_selector_4_tokopedia)).text
         except NoSuchElementException:
-            pass
+            harga_jual = ""
 
         produk = {
             "links": link,
@@ -288,7 +293,7 @@ def program2():
 def scraping():
     schedule.every(20).seconds.do(program2)  # Pindahkan ke sini  # Pindahkan ke sini
 
-    program1()
+    program1(max_retries=3)
     schedule.run_all()
 
 def start_scraping():

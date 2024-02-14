@@ -157,6 +157,7 @@ button_load = tk.Button(root, text="Load Data From", command=load_data_from)
 button_load.pack()
 
 def program1():
+    
     #driver = webdriver.Chrome()
     options.add_argument("--disable-images")
     options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
@@ -164,40 +165,60 @@ def program1():
     driver.set_window_size(400,500)
 
     produk_list = []
+    max_retries = 3  # Maximum retries per link (adjust as needed)
+    retry_delay = 2
     for link in link_produk_1:
-        driver.get(link)
-        time.sleep(2)
-        try:
-            judul_produk = driver.find_element(By.CSS_SELECTOR, input_selector_h1).text
-        except NoSuchElementException:
-            judul_produk = ""
+
+        for attempt in range(max_retries):
+            try:
+                # Scrape content (replace with your scraping logic)
+                driver.get(link)
+                time.sleep(2)
+
+                try:
+                    judul_produk = driver.find_element(By.CSS_SELECTOR, input_selector_h1).text
+                except NoSuchElementException:
+                    judul_produk = ""
         #try:
         #    judul_produk = driver.find_element(EC.presence_of_element_located(By.CSS_SELECTOR, input_selector_h1)).text
         #except NoSuchElementException:
         #    pass
-        try:
-            stok = driver.find_element(By.CSS_SELECTOR, input_selector_2_bukalapak).text
-        except NoSuchElementException:
-            pass
-        try:
-            harga_normal = driver.find_element(By.CSS_SELECTOR, input_selector_3_bukalapak).text
-        except NoSuchElementException:
-            pass
-        try:
-            harga_jual = driver.find_element(By.CSS_SELECTOR, input_selector_4_bukalapak).text
-        except NoSuchElementException:
-            pass
-
-        produk = {
-            "links": link,
-            "judul": judul_produk,
-            "stok": stok,
-            "harga_normal": harga_normal,
-            "harga_jual": harga_jual
+                try:
+                    stok = driver.find_element(By.CSS_SELECTOR, input_selector_2_bukalapak).text
+                except NoSuchElementException:
+                    pass
+                try:
+                    harga_normal = driver.find_element(By.CSS_SELECTOR, input_selector_3_bukalapak).text
+                except NoSuchElementException:
+                    pass
+                try:
+                    harga_jual = driver.find_element(By.CSS_SELECTOR, input_selector_4_bukalapak).text
+                except NoSuchElementException:
+                    pass
+                produk = {
+                    "links": link,
+                    "judul": judul_produk,
+                    "stok": stok,
+                    "harga_normal": harga_normal,
+                    "harga_jual": harga_jual,
                 }
 
-        produk_list.append(produk)
-    print(produk_list)
+                produk_list.append(produk)
+                break  # Exit inner loop if successful
+
+            except MemoryError as e:
+                print(f"Error scraping {link}: {e}")
+                if attempt < max_retries - 1:
+                    print(f"Retrying link {link} (attempt {attempt+1} of {max_retries}) after {retry_delay} seconds")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Increase delay for subsequent retries
+                    driver.quit()  # Close the current Webdriver instance
+                    driver = webdriver.Chrome(options=options)  # Create a new Webdriver instance
+                else:
+                    print(f"Maximum retries reached for link {link}")
+
+        # Always close the Webdriver instance to release memory
+
     for produk in produk_list:
          print("links:", produk["links"])
 

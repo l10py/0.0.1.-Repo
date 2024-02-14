@@ -101,7 +101,7 @@ button_load.pack()
 
 def program1():
     #driver = webdriver.Chrome()
-    driver = webdriver.Chrome(executable_path='/path/to/chromedriver', chrome_options=options, service_args=["--max_old_space_size=4096"])
+    driver = webdriver.Chrome()
     driver.set_window_size(400,500)
     produk_list = []
     for link in link_produk_1:
